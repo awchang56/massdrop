@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const Site = require('../database')
+
+
 
 app.use(express.static(__dirname + '/../src/client/public'));
 
