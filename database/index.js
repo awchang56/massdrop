@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/sites');
-const db = mongoose.connection;
+const db = mongoose.createConnection('mongodb://localhost:27017/sites');
 
 db.on('error', () => {
   console.log('error connecting to mongoose');
@@ -10,11 +9,12 @@ db.once('open', () => {
   console.log('mongoose connection established');
 })
 
-const siteSchema = mongoose.Schema({
-  jobID: {type: Number, index: {unique: true}},
+const siteSchema = new mongoose.Schema({
+  jobID: {type: String, index: {unique: true}},
+  url: String,
   html: String
 });
 
-const Site = mongoose.model('Site', siteSchema);
+const Site = db.model('Site', siteSchema);
 
 module.exports = Site;
