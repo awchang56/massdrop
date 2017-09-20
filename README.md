@@ -17,7 +17,7 @@ On the command prompt run the following commands
 ```sh
 $ git clone https://github.com/awchang56/massdrop.git && cd massdrop
 
-$ mkdir database/data/db
+$ mkdir database/data && mkdir database/data/db
 
 $ yarn install
 ```
