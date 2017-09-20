@@ -25,9 +25,9 @@ $ yarn install
 ```sh
 $ npm run build
 
-$ npm run server-start
-
 $ npm run db-start
+
+$ npm run server-start
 ```
 ### 3. Tech Stack
 
