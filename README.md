@@ -20,15 +20,19 @@ $ git clone https://github.com/awchang56/massdrop.git && cd massdrop
 $ mkdir database/data && mkdir database/data/db
 
 $ yarn install
+
+$ npm run build
 ```
+In separate terminal windows run the following 2 commands:
 
 ```sh
-$ npm run build
-
 $ npm run db-start
 
 $ npm run server-start
 ```
+
+In the browser, go to [Massdrop Coding Challenge](http://localhost:3000)
+
 ### 3. Tech Stack
 
 **React**
