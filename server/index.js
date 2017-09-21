@@ -21,7 +21,7 @@ app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../src/client/public'));
 
-app.post('/url/', (req, res) => {
+app.post('/url', (req, res) => {
   let url = req.body.url;
   let protocolIndex = url.indexOf('://');
   if (protocolIndex < 0) {
