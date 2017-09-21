@@ -11,8 +11,9 @@ const updateHTML = (url, html) => {
       if (err) {
         console.log('error updating document in DB: ', err);
       }
-    })
-}
+    }
+  );
+};
 
 const fetchHTML = (url) => {
   axios.get(url)
@@ -22,15 +23,13 @@ const fetchHTML = (url) => {
     .catch(err => {
       console.log('invalid url, error code: ', err.code);
       updateHTML(url, 'Invalid URL');
-
     });
 };
-
 
 const processJobs = (jobQueue) => {
   while (jobQueue.size() > 0) {
     fetchHTML(jobQueue.dequeue());
   }
-}
+};
 
 module.exports = processJobs;
