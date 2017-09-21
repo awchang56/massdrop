@@ -1,46 +1,56 @@
 const express = require('express');
 const Site = require('../database');
 const axios = require('axios');
+const bodyParser = require('body-parser');
+const validate = require("validate.js");
 const sha1 = require('sha1');
+const processJobs = require('./htmlFetcher');
+const JobQueue = require('./JobQueue');
 
+const jobQueue = new JobQueue();
 const app = express();
+
+setInterval(processJobs.bind(this, jobQueue), 15000);
 
 app.listen(3000, () => {
   console.log('listening on port 3000');
 });
 
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
+
 app.use(express.static(__dirname + '/../src/client/public'));
 
-app.get('/url/:url', (req, res) => {
-  let url = req.params.url;
+app.post('/url/', (req, res) => {
+  let url = req.body.url;
   let protocolIndex = url.indexOf('://');
   if (protocolIndex < 0) {
     url = ('http://' + url);
   }
-  let jobID = sha1(url);
-  Site.find({jobID: jobID})
-    .then(response => {
-      if (response.length > 0) {
-        res.status(200).send('already fetched');
-      } else {
-        axios.get(url)
-          .then(response => {
-            new Site({jobID: jobID, url: url, html: response.data})
-              .save((err, doc) => {
-                res.status(200).send(doc);
-              })
-              .catch(err => {
-                res.status(400).send('error saving html to DB');
-              });
-          })
-          .catch(err => {
-            res.status(400).send('error fetching url');
-          });
-      }
-    })
-    .catch(err => {
-      res.status(400).send('error looking for duplicate jobID');
-    });
+  if (validate({website: url}, {website: {url: true}})) {
+    res.status(400).send('invalid URL');
+  } else {
+    let jobID = sha1(url);
+
+    Site.find({jobID: jobID})
+      .then(response => {
+        if (response.length > 0) {
+          res.status(200).send('already fetched');
+        } else {
+          jobQueue.enqueue(url);
+          new Site({url: url, jobID: jobID, html: 'Please try again soon. We are still fetching the html.'})
+            .save((err, doc) => {
+              res.status(200).send(doc);
+            })
+            .catch(err => {
+              res.status(400).send('error saving html to DB');
+            });
+        }
+      })
+      .catch(err => {
+        res.status(400).send('error looking for duplicate jobID');
+      });
+  }
 });
 
 app.get('/job/:id', (req, res) => {

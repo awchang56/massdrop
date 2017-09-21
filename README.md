@@ -31,8 +31,10 @@ $ npm run db-start
 ```
 ### 3. Tech Stack
 
-* React
+** React **
+
   I used React in this project because of its re-rendering efficiency and flexibility. I also chose React for its ease of use when controlling state. I did not have to do significant data modeling in this application, so Redux was not necessary. React, being primarily the View component of a MVC app, was sufficient for an app like this.
+
 * Node/Express
   I chose Node/Express to take advantage of Node's native non-blocking I/O. This is not a processor intensive app, like a gaming application. Also Node is significantly easier to scale than Rails because of its blazing processing speed. It also allows for easier development, since both front and back end are written in the same language.
 * Mongoose/MongoDB

@@ -24,15 +24,8 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('/job')
-      .then(response => {
-        this.setState({
-          jobs: response.data
-        });
-      })
-      .catch(err => {
-        console.log('error retrieving all jobs from server');
-      });
+    this.fetchJobs();
+    setInterval(() => this.fetchJobs(), 3000);
   }
 
   handleUrl(e) {
@@ -55,8 +48,22 @@ class App extends React.Component {
     });
   }
 
+  fetchJobs() {
+    axios.get('/job')
+      .then(response => {
+        this.setState({
+          jobs: response.data
+        });
+      })
+      .catch(err => {
+        console.log('error retrieving all jobs from server');
+      });
+  }
+
   fetchHTML() {
-    axios.get('/url/' + this.state.url)
+    axios.post('/url', {
+        url: this.state.url
+      })
       .then(res => {
         if (res.data === 'already fetched') {
           this.setState({
